@@ -1,2 +1,2 @@
-# llvm-regress
-Try to track llvm regressions.
+# llvm-helpers
+Try to track work with llvm easily.
