@@ -1,7 +1,16 @@
-cd tmp
+WORKDIR=$PWD/tmp
+if [ -d $WORKDIR ]; then
+  echo "Dirty workdir"
+  echo $WORKDIR
+  echo "Remove it and re-run"
+  exit 1
+fi
+
+mkdir $WORKDIR
+cd $WORKDIR
 
 # Setup virtual environment
-/usr/local/bin/virtualenv venv
+/usr/bin/virtualenv venv
 . venv/bin/activate
 
 # Checkout test-suite and LNT
@@ -19,9 +28,12 @@ python lnt/setup.py develop
 # Install LIT
 pip install  svn+http://llvm.org/svn/llvm-project/llvm/trunk/utils/lit/
 
+# Create a sandbox directory
+mkdir $PWD/sandbox
+
 # Set some variables
-SANDBOX=/Path/To/Where/LNT/Will/Run
-COMPILER=/Path/To/Your/Compiler
+SANDBOX=$PWD/sandbox
+COMPILER=/home/davide/work/llvm/build-rel-noassert/
 TESTSUITE=$PWD/test-suite       # We should've checked it out here
 OPTSET=ReleaseLTO               # Or Os, or O0-g, or ReleaseThinLTO (see test-suite/cmake/cache for other options)
 
