@@ -35,14 +35,10 @@ mkdir $PWD/sandbox
 SANDBOX=$PWD/sandbox
 COMPILER=/home/davide/work/llvm/build-rel-noassert/
 TESTSUITE=$PWD/test-suite       # We should've checked it out here
-OPTSET=ReleaseLTO               # Or Os, or O0-g, or ReleaseThinLTO (see test-suite/cmake/cache for other options)
-
-# Create sandbox
-mkdir $SANDBOX
-cd $SANDBOX
+OPTSET=Os               # Or ReleaseLTO, or O0-g, or ReleaseThinLTO (see test-suite/cmake/cache)
 
 # Fill in LNT flags
-LNT_FLAGS =" --sandbox $SANDBOX"
+LNT_FLAGS=" --sandbox $SANDBOX"
 LNT_FLAGS+=" --no-timestamp"
 LNT_FLAGS+=" --use-lit=lit"
 LNT_FLAGS+=" --cc $COMPILER/bin/clang"
@@ -50,13 +46,12 @@ LNT_FLAGS+=" --cxx $COMPILER/bin/clang++"
 LNT_FLAGS+=" --test-suite=$TESTSUITE"
 LNT_FLAGS+=" --cmake-define TEST_SUITE_BENCHMARKING_ONLY=On"
 LNT_FLAGS+=" --no-auto-name '${COMPILER%.*}'"
-LNT_FLAGS+=" --output \"$SANDBOX/report.json\""
-LNT_FLAGS+=" -C target-arm64-iphoneos -C $OPTSET"
+LNT_FLAGS+=" --output $SANDBOX/report.json"
+LNT_FLAGS+=" -C $OPTSET"
 
-LNT_FLAGS+=" --cmake-define TEST_SUITE_RUN_BENCHMARKS=Off"
+LNT_FLAGS+=" --cmake-define TEST_SUITE_RUN_BENCHMARKS=0"
 LNT_FLAGS+=" --build-threads 1"
-LNT_FLAGS+=" --cmake-define TEST_SUITE_SUBDIRS=\"CTMark\""
+LNT_FLAGS+=" --cmake-define TEST_SUITE_SUBDIRS=CTMark"
 
 # Run LNT
 lnt runtest test-suite ${LNT_FLAGS}
-
